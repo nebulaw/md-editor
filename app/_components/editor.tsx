@@ -1,5 +1,8 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import useCodeMirror from "@/hooks/use-codemirror";
+import type { EditorSettings } from "@/types/settings";
+
+import "@/styles/editor.css";
 
 interface EditorProps {
   initialValue: string;
@@ -10,6 +13,15 @@ const Editor: React.FC<EditorProps> = ({
   initialValue,
   onChange,
 }: EditorProps) => {
+  const [settings, setSettings] = useState<EditorSettings>({
+    theme: "Noctis Lilac",
+    lineNumbers: false,
+    lineWrapping: true,
+    highlightActiveLine: false,
+    matchBrackets: true,
+    transparentBackground: true,
+  });
+
   const handleChange = useCallback(
     (state: any) => onChange(state.doc.toString()),
     [onChange]
@@ -17,6 +29,7 @@ const Editor: React.FC<EditorProps> = ({
   const [refContainer, editorView] = useCodeMirror<HTMLDivElement>({
     initialValue: initialValue,
     onChange: handleChange,
+    settings: settings,
   });
 
   useEffect(() => {
@@ -25,7 +38,7 @@ const Editor: React.FC<EditorProps> = ({
     }
   }, [editorView]);
 
-  return <div className="editor-wrapper" ref={refContainer}></div>;
+  return <div className="editor-wrapper sm:p-6 md:p-8 xl:p-16" ref={refContainer}></div>;
 };
 
 export default Editor;

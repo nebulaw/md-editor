@@ -12,14 +12,6 @@ const styles = {
     width: '100%',
     zIndex: 1000,
   },
-  spinner: {
-    width: '50px',
-    height: '50px',
-    border: '5px solid rgba(0, 0, 0, 0.1)',
-    borderTop: '5px solid #3498db',
-    borderRadius: '50%',
-    animation: 'spin 340ms linear infinite',
-  },
   text: {
     marginTop: '10px',
     fontSize: '18px',
@@ -30,7 +22,6 @@ const styles = {
 const Loading: React.FC = () => {
   return (
     <div style={styles.container}>
-      <div style={styles.spinner}></div>
       <p style={styles.text}>Loading editor...</p>
     </div>
   );

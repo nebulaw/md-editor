@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
@@ -32,7 +32,7 @@ const Preview: React.FC<PreivewProps> = ({ value }) => {
       },
     })
     .processSync(value).result;
-  return <div className="preview markdown-body">{md}</div>;
+  return <div className="preview markdown-body p-6 sm:p-6 md:p-8 xl:p-16">{md}</div>;
 };
 
 export default Preview;

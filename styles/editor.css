@@ -1,0 +1,30 @@
+
+.editor-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-size: 1.4em;
+  font-weight: 500;
+  font-family: MonoLisa;
+  overflow-y: auto;
+}
+
+.cm-gutters, .cm-gutter {
+  border: none !important;
+  background-color: transparent !important;
+}
+
+.cm-focused {
+  border: none !important;
+  outline: none !important;
+}
+
+.cm-scroller {
+  overflow: auto !important;
+  height: 100% !important;
+}
+
+.cm-editor {
+  height: auto !important;
+}
+
