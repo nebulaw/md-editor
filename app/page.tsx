@@ -4,10 +4,9 @@ import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
 import Loading from "./loading";
-import SettingsModal from "./_components/settings";
 
 
-const MarkdownEditor = dynamic(() => import('./_components/container'), {
+const EditorContainer = dynamic(() => import('./_components/container'), {
   ssr: false,
   loading: () => <Loading />
 });
@@ -22,7 +21,7 @@ const Page = () => {
 
   return (
     <div className="app">
-      {isLoading ? <Loading /> : <MarkdownEditor />}
+      {isLoading ? <Loading /> : <EditorContainer />}
     </div>
   );
 };

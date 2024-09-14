@@ -6,19 +6,20 @@ import {
   highlightActiveLineGutter,
   lineNumbers,
   highlightActiveLine,
+  KeyBinding,
 } from "@codemirror/view";
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import {
   indentOnInput,
   bracketMatching,
-  defaultHighlightStyle,
+  syntaxHighlighting,
   HighlightStyle,
 } from "@codemirror/language";
 import { tags } from "@lezer/highlight";
-import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
+import { markdown, markdownKeymap, markdownLanguage } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
-import { noctisLilac, dracula } from 'thememirror';
-import type { EditorSettings } from "@/types/settings";
+import { noctisLilac, dracula, ayuLight } from 'thememirror';
+import type { EditorState as LocalState } from "@/types/editor";
 
 export const transparentTheme = EditorView.theme({
   "&": {
@@ -33,25 +34,24 @@ const mapTheme = (theme: string) => {
       return noctisLilac;
     case "Dracula":
       return dracula;
+    case "Ayu Light":
+      return ayuLight;
     default:
       return noctisLilac;
   }
 }
 
-const syntaxHighlighting = HighlightStyle.define([
+const markdownSyntaxHighlighting = HighlightStyle.define([
   {
-    tag: tags.heading1,
-    fontSize: "1.6em",
+    tag: tags.heading,
     fontWeight: "bold",
   },
   {
-    tag: tags.heading2,
-    fontSize: "1.4em",
-    fontWeight: "bold",
+    tag: tags.link,
+    textDecoration: "underline",
   },
   {
-    tag: tags.heading3,
-    fontSize: "1.2em",
+    tag: tags.strong,
     fontWeight: "bold",
   },
 ]);
@@ -59,14 +59,14 @@ const syntaxHighlighting = HighlightStyle.define([
 interface Props {
   initialValue: string;
   onChange?: (state: EditorState) => void;
-  settings?: EditorSettings;
+  state?: LocalState;
 }
 
 
 const useCodeMirror = <T extends Element>({
   initialValue,
   onChange,
-  settings,
+  state,
 }: Props): [React.MutableRefObject<T | null>, EditorView?] => {
   const refContainer = useRef<T>(null);
   const [editorView, setEditorView] = useState<EditorView>();
@@ -78,8 +78,16 @@ const useCodeMirror = <T extends Element>({
       refContainer.current?.removeChild(node);
     })
 
+    let effectKeymap: KeyBinding[] = [];
+    state?.effects.map((effect) => {
+      effectKeymap.push({
+        key: effect.keymap,
+        run: (e: EditorView) => effect.apply(e)
+      })
+    });
+
     let extensions = [
-      keymap.of([...defaultKeymap, ...historyKeymap]),
+      keymap.of([...defaultKeymap, ...historyKeymap, ...effectKeymap]),
       history(),
       indentOnInput(),
       markdown({
@@ -87,19 +95,26 @@ const useCodeMirror = <T extends Element>({
         codeLanguages: languages,
         addKeymap: true,
       }),
+      syntaxHighlighting(markdownSyntaxHighlighting),
       EditorView.updateListener.of((update) => {
         if (update.changes) {
           onChange && onChange(update.state);
         }
       }),
     ];
-    settings?.lineNumbers && extensions.push(lineNumbers());
-    settings?.lineWrapping && extensions.push(EditorView.lineWrapping);
-    settings?.highlightActiveLine && extensions.push(highlightActiveLine());
-    settings?.highlightActiveLine && extensions.push(highlightActiveLineGutter());
-    settings?.matchBrackets && extensions.push(bracketMatching());
-    settings?.transparentBackground && extensions.push(transparentTheme);
-    settings?.theme && extensions.push(mapTheme(settings.theme));
+    state?.lineNumbers && extensions.push(lineNumbers());
+    state?.lineWrapping && extensions.push(EditorView.lineWrapping);
+    state?.highlightActiveLine && extensions.push(highlightActiveLine());
+    state?.highlightActiveLine && extensions.push(highlightActiveLineGutter());
+    state?.matchBrackets && extensions.push(bracketMatching());
+    state?.transparentBackground && extensions.push(transparentTheme);
+    state?.theme && extensions.push(mapTheme(state.theme));
+    // state?.effects.map((effect, index) => {
+    //   // here we have to create a command
+    //   const key = {
+    //     key: effect.keymap,
+    //   }
+    // })
 
     const view = new EditorView({
       state: EditorState.create({
@@ -109,7 +124,7 @@ const useCodeMirror = <T extends Element>({
       parent: refContainer.current,
     });
     setEditorView(view);
-  }, [refContainer, settings]);
+  }, [refContainer, state, initialValue]);
 
   return [refContainer, editorView];
 };

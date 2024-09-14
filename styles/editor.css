@@ -1,17 +1,14 @@
 
-.editor-wrapper {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  font-size: 1.4em;
-  font-weight: 500;
-  font-family: MonoLisa;
-  overflow-y: auto;
-}
-
-.cm-gutters, .cm-gutter {
+.cm-gutters,
+.cm-gutter {
   border: none !important;
   background-color: transparent !important;
+  color: #111 !important;
+}
+
+.cm-gutterElement {
+  padding-left: 0.2em !important;
+  padding-right: 0.2em !important;
 }
 
 .cm-focused {
@@ -20,11 +17,58 @@
 }
 
 .cm-scroller {
-  overflow: auto !important;
+  /* overflow: auto !important; */
   height: 100% !important;
 }
 
 .cm-editor {
   height: auto !important;
+}
+
+.editor-viewport {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.editor-container {
+  /* background-color: transparent; */
+  display: flex;
+  /* flex-direction: row; */
+  height: 100%;
+  width: 100%;
+  /* margin-top: 3.2em; */
+}
+
+.editor-toolbar {
+  color: black;
+  background-color: #fefefe;
+  border: 1px solid #ddd;
+  border-radius: 0.8em;
+  padding: 0.2em;
+  position: absolute;
+  z-index: 50;
+  width: 90%;
+  margin: 1em auto;
+}
+
+.editor-toolbar button {
+  margin-right: 5px;
+  padding: 0.2em 0.5em;
+  border: none;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.editor-toolbar button:hover {
+  background-color: #ddd;
+}
+
+.editor-wrapper {
+  height: 100%;
+  flex: 1 1 50%;
+  /* font-size: 1.3em; */
+  font-family: MonoLisa;
 }
 

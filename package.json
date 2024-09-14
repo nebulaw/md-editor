@@ -33,7 +33,8 @@
     "remark-react": "^9.0.1",
     "remark-typescript": "^0.6.1",
     "thememirror": "^2.0.1",
-    "unified": "^11.0.5"
+    "unified": "^11.0.5",
+    "unist-util-is": "^6.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",
